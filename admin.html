@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin — PDF Hub</title>
+  <link rel="stylesheet" href="assets/style.css">
+</head>
+<body>
+  <header class="topbar">
+    <a class="brand" href="index.html">PDF<span>Hub</span></a>
+    <a class="admin-link" href="index.html">Public site</a>
+  </header>
+
+  <main class="admin-main">
+    <section id="loginPanel" class="panel auth-panel">
+      <p class="eyebrow">ADMIN ONLY</p>
+      <h1>Admin login</h1>
+      <p>Only the administrator can upload, edit and delete PDFs.</p>
+      <form id="loginForm">
+        <label>Email<input id="email" type="email" required placeholder="admin@example.com"></label>
+        <label>Password<input id="password" type="password" required placeholder="••••••••"></label>
+        <button class="btn primary" type="submit">Sign in</button>
+        <p id="loginMessage" class="message"></p>
+      </form>
+    </section>
+
+    <section id="dashboard" class="hidden">
+      <div class="section-head">
+        <div>
+          <p class="eyebrow">ADMIN PANEL</p>
+          <h1>Dashboard</h1>
+        </div>
+        <button id="logoutBtn" class="btn">Logout</button>
+      </div>
+
+      <div class="stats">
+        <div class="stat"><strong id="totalCount">0</strong><span>Total PDFs</span></div>
+        <div class="stat"><strong id="categoryCount">0</strong><span>Categories</span></div>
+      </div>
+
+      <div class="panel">
+        <h2>Upload PDF</h2>
+        <form id="uploadForm" class="form-grid">
+          <label>Title<input id="pdfTitle" required placeholder="PDF title"></label>
+          <label>Category<input id="pdfCategory" required placeholder="e.g. Education"></label>
+          <label class="wide">Description<textarea id="pdfDescription" placeholder="Short description"></textarea></label>
+          <label class="wide">PDF file<input id="pdfFile" type="file" accept="application/pdf" required></label>
+          <button class="btn primary wide" type="submit">Upload PDF</button>
+          <p id="uploadMessage" class="message wide"></p>
+        </form>
+      </div>
+
+      <div class="panel">
+        <h2>Manage PDFs</h2>
+        <div id="adminList" class="admin-list"></div>
+      </div>
+    </section>
+  </main>
+  <script src="assets/config.js"></script>
+  <script src="assets/admin.js"></script>
+</body>
+</html>

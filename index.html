@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>PDF Hub</title>
+  <link rel="stylesheet" href="assets/style.css">
+</head>
+<body>
+  <header class="topbar">
+    <a class="brand" href="index.html">PDF<span>Hub</span></a>
+    <a class="admin-link" href="admin.html">Admin</a>
+  </header>
+
+  <main>
+    <section class="hero">
+      <div>
+        <p class="eyebrow">DOCUMENT LIBRARY</p>
+        <h1>Find and download<br>the PDFs you need.</h1>
+        <p class="hero-copy">Browse the public PDF collection. No user account is required.</p>
+        <div class="search">
+          <span>⌕</span>
+          <input id="searchInput" type="search" placeholder="Search PDFs...">
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="section-head">
+        <div>
+          <p class="eyebrow">LIBRARY</p>
+          <h2>Available PDFs</h2>
+        </div>
+        <select id="categoryFilter">
+          <option value="">All categories</option>
+        </select>
+      </div>
+      <div id="pdfGrid" class="grid"></div>
+      <div id="emptyState" class="empty hidden">No PDFs found.</div>
+    </section>
+  </main>
+
+  <footer>© 2026 PDF Hub</footer>
+  <script src="assets/config.js"></script>
+  <script src="assets/app.js"></script>
+</body>
+</html>
