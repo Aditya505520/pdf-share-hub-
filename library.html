@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>PDF Share Hub</title>
+
+  <link rel="stylesheet" href="assets/style.css">
+
+  <link rel="manifest" href="manifest.json">
+  <meta name="theme-color" content="#635bff">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+</head>
+<body>
+  <header class="topbar">
+    <a class="brand" href="index.html">PDF<span>Share Hub</span></a>
+    <a class="admin-link" href="admin.html">Admin</a>
+  </header>
+
+  <main>
+    <section class="hero">
+      <div>
+        <p class="eyebrow">DOCUMENT LIBRARY</p>
+        <h1>Find and download<br>the PDFs you need.</h1>
+        <p class="hero-copy">Browse the public PDF collection. No user account is required.</p>
+        <div class="search">
+          <span>⌕</span>
+          <input id="searchInput" type="search" placeholder="Search PDFs...">
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="section-head">
+        <div>
+          <p class="eyebrow">LIBRARY</p>
+          <h2>Available PDFs</h2>
+        </div>
+        <select id="categoryFilter">
+          <option value="">All categories</option>
+        </select>
+      </div>
+      <div id="pdfGrid" class="grid"></div>
+      <div id="emptyState" class="empty hidden">No PDFs found.</div>
+    </section>
+  </main>
+
+  <footer>© 2026 PDF Share Hub</footer>
+  <script src="assets/config.js"></script>
+  <script src="assets/app.js"></script>
+  <script>
+if ("serviceWorker" in navigator) {
+  window.addEventListener("load", () => {
+    navigator.serviceWorker.register("./sw.js")
+      .then(() => console.log("PDF Share Hub PWA ready"))
+      .catch(error => console.error("PWA error:", error));
+  });
+}
+</script>
+</body>
+</html>

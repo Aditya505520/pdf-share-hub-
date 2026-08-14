@@ -1,62 +1,1002 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>PDF Share Hub</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-  <link rel="stylesheet" href="assets/style.css">
+<title>PDF Share Hub</title>
 
-  <link rel="manifest" href="manifest.json">
-  <meta name="theme-color" content="#635bff">
-  <meta name="mobile-web-app-capable" content="yes">
-  <meta name="apple-mobile-web-app-capable" content="yes">
-</head>
-<body>
-  <header class="topbar">
-    <a class="brand" href="index.html">PDF<span>Share Hub</span></a>
-    <a class="admin-link" href="admin.html">Admin</a>
-  </header>
+<style>
 
-  <main>
-    <section class="hero">
-      <div>
-        <p class="eyebrow">DOCUMENT LIBRARY</p>
-        <h1>Find and download<br>the PDFs you need.</h1>
-        <p class="hero-copy">Browse the public PDF collection. No user account is required.</p>
-        <div class="search">
-          <span>⌕</span>
-          <input id="searchInput" type="search" placeholder="Search PDFs...">
-        </div>
-      </div>
-    </section>
-
-    <section class="section">
-      <div class="section-head">
-        <div>
-          <p class="eyebrow">LIBRARY</p>
-          <h2>Available PDFs</h2>
-        </div>
-        <select id="categoryFilter">
-          <option value="">All categories</option>
-        </select>
-      </div>
-      <div id="pdfGrid" class="grid"></div>
-      <div id="emptyState" class="empty hidden">No PDFs found.</div>
-    </section>
-  </main>
-
-  <footer>© 2026 PDF Share Hub</footer>
-  <script src="assets/config.js"></script>
-  <script src="assets/app.js"></script>
-  <script>
-if ("serviceWorker" in navigator) {
-  window.addEventListener("load", () => {
-    navigator.serviceWorker.register("./sw.js")
-      .then(() => console.log("PDF Share Hub PWA ready"))
-      .catch(error => console.error("PWA error:", error));
-  });
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
 }
-</script>
+
+html{
+    scroll-behavior:smooth;
+}
+
+body{
+    font-family:Arial,Helvetica,sans-serif;
+    min-height:100vh;
+    color:white;
+    overflow-x:hidden;
+
+    background:
+        radial-gradient(circle at 75% 55%,#08277d 0%,transparent 35%),
+        radial-gradient(circle at 10% 90%,#071d72 0%,transparent 35%),
+        linear-gradient(135deg,#020817,#00143c 55%,#020b25);
+}
+
+
+/* BACKGROUND */
+
+a{
+    color:white;
+    text-decoration:none;
+}
+
+.bg-glow{
+    position:fixed;
+    border-radius:50%;
+    filter:blur(100px);
+    opacity:.35;
+    pointer-events:none;
+}
+
+.glow1{
+    width:400px;
+    height:400px;
+    background:#0066ff;
+    top:15%;
+    right:-150px;
+}
+
+.glow2{
+    width:350px;
+    height:350px;
+    background:#6200ff;
+    bottom:-100px;
+    left:-100px;
+}
+
+.grid{
+    position:fixed;
+    inset:0;
+    opacity:.06;
+    pointer-events:none;
+
+    background-image:
+        linear-gradient(#fff 1px,transparent 1px),
+        linear-gradient(90deg,#fff 1px,transparent 1px);
+
+    background-size:70px 70px;
+
+    mask-image:linear-gradient(
+        to bottom,
+        transparent,
+        black,
+        transparent
+    );
+}
+
+
+/* HEADER */
+
+.header{
+    width:90%;
+    max-width:1400px;
+    margin:auto;
+
+    padding:25px 0;
+
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+
+    position:relative;
+    z-index:10;
+}
+
+.logo{
+    display:flex;
+    align-items:center;
+    gap:12px;
+
+    font-size:20px;
+    font-weight:bold;
+}
+
+.logo-icon{
+    width:40px;
+    height:40px;
+
+    display:grid;
+    place-items:center;
+
+    border-radius:11px;
+
+    background:#0755d8;
+
+    box-shadow:0 0 25px #087cff;
+
+    font-size:22px;
+}
+
+.admin-btn{
+    padding:13px 20px;
+
+    color:white;
+
+    background:rgba(0,80,190,.2);
+
+    border:1px solid #148cff;
+
+    border-radius:10px;
+
+    cursor:pointer;
+
+    transition:.3s;
+}
+
+.admin-btn:hover{
+    background:#087cff;
+    box-shadow:0 0 25px #087cff;
+}
+
+
+/* MAIN */
+
+.container{
+    width:90%;
+    max-width:1400px;
+
+    margin:auto;
+
+    display:grid;
+
+    grid-template-columns:1fr 1fr;
+
+    gap:30px;
+
+    align-items:center;
+
+    position:relative;
+    z-index:2;
+}
+
+
+/* INTRO */
+
+.intro{
+    padding:30px 0;
+}
+
+.welcome{
+    display:inline-block;
+
+    padding:11px 20px;
+
+    margin-bottom:20px;
+
+    border-radius:12px;
+
+    background:linear-gradient(
+        135deg,
+        #164ed7,
+        #172c8d
+    );
+
+    border:1px solid #267fff;
+}
+
+h1{
+    font-size:clamp(55px,8vw,105px);
+
+    line-height:.9;
+
+    letter-spacing:-5px;
+
+    margin-bottom:20px;
+}
+
+h1 span{
+    display:block;
+
+    background:linear-gradient(
+        90deg,
+        #00b7ff,
+        #1750ff,
+        #b426ff,
+        #ff45cf
+    );
+
+    -webkit-background-clip:text;
+    background-clip:text;
+
+    color:transparent;
+
+    filter:drop-shadow(
+        0 0 20px rgba(40,100,255,.3)
+    );
+}
+
+.subtitle{
+    font-size:22px;
+
+    color:#dbe7ff;
+
+    margin-bottom:28px;
+}
+
+.description{
+    max-width:650px;
+
+    color:#c2cde5;
+
+    font-size:16px;
+
+    line-height:1.8;
+}
+
+.description p{
+    margin-bottom:18px;
+}
+
+.description strong{
+    color:#24a5ff;
+}
+
+.profile-link{
+    display:inline-block;
+
+    margin-top:5px;
+
+    color:#3baaff;
+
+    font-size:18px;
+    font-weight:bold;
+
+    text-decoration:none;
+
+    border-bottom:2px solid #673cff;
+
+    padding-bottom:5px;
+}
+
+.login-btn{
+    display:block;
+
+    margin-top:28px;
+
+    padding:15px 30px;
+
+    color:white;
+
+    background:rgba(0,80,190,.15);
+
+    border:2px solid #008cff;
+
+    border-radius:12px;
+
+    font-size:16px;
+    font-weight:bold;
+
+    cursor:pointer;
+
+    transition:.3s;
+}
+
+.login-btn:hover{
+    background:#087cff;
+
+    box-shadow:0 0 30px #087cff;
+
+    transform:translateY(-3px);
+}
+
+
+/* ILLUSTRATION */
+
+.illustration{
+    height:600px;
+
+    position:relative;
+
+    display:grid;
+    place-items:center;
+}
+
+.orbit{
+    position:absolute;
+
+    border-radius:50%;
+
+    border:1px solid rgba(0,150,255,.5);
+
+    transform:rotate(-20deg);
+}
+
+.orbit1{
+    width:480px;
+    height:260px;
+}
+
+.orbit2{
+    width:400px;
+    height:220px;
+
+    border-color:rgba(150,60,255,.5);
+}
+
+.orbit3{
+    width:300px;
+    height:170px;
+
+    border-color:rgba(0,220,255,.3);
+}
+
+
+/* PDF */
+
+.pdf-document{
+    width:300px;
+    height:370px;
+
+    position:relative;
+
+    background:linear-gradient(
+        145deg,
+        #fff,
+        #dce6ff
+    );
+
+    border-radius:22px;
+
+    box-shadow:
+        0 25px 70px rgba(0,0,0,.5),
+        0 0 50px rgba(50,80,255,.3);
+
+    transform:perspective(900px) rotateY(-8deg);
+
+    z-index:3;
+}
+
+.pdf-fold{
+    position:absolute;
+
+    right:0;
+    top:0;
+
+    width:80px;
+    height:80px;
+
+    background:#c8d5ef;
+
+    clip-path:polygon(
+        0 0,
+        100% 100%,
+        0 100%
+    );
+}
+
+.pdf-label{
+    position:absolute;
+
+    top:70px;
+    left:-15px;
+
+    padding:16px 35px;
+
+    background:linear-gradient(
+        135deg,
+        #ff3434,
+        #df0505
+    );
+
+    color:white;
+
+    font-size:35px;
+    font-weight:900;
+
+    border-radius:10px;
+
+    box-shadow:0 10px 25px rgba(255,0,0,.35);
+}
+
+.pdf-lines{
+    position:absolute;
+
+    left:55px;
+    bottom:80px;
+
+    display:flex;
+    flex-direction:column;
+
+    gap:18px;
+}
+
+.pdf-lines span{
+    width:150px;
+    height:14px;
+
+    background:#8ea9ed;
+
+    border-radius:10px;
+}
+
+.pdf-lines span:nth-child(2){
+    width:130px;
+}
+
+.pdf-lines span:nth-child(3){
+    width:110px;
+}
+
+
+/* PLATFORM */
+
+.platform{
+    position:absolute;
+
+    bottom:60px;
+
+    width:390px;
+    height:70px;
+
+    border-radius:50%;
+
+    background:
+        linear-gradient(
+            90deg,
+            #071d6e,
+            #111a6f,
+            #16075d
+        );
+
+    border:2px solid #087cff;
+
+    box-shadow:
+        0 0 35px #003dff,
+        inset 0 0 30px #1735b9;
+
+    transform:
+        perspective(400px)
+        rotateX(65deg);
+
+    z-index:1;
+}
+
+
+/* FLOATING ICONS */
+
+.floating-icon{
+    width:70px;
+    height:70px;
+
+    position:absolute;
+
+    display:grid;
+    place-items:center;
+
+    border-radius:50%;
+
+    font-size:28px;
+
+    z-index:5;
+
+    animation:float 4s ease-in-out infinite;
+}
+
+.cloud{
+    top:70px;
+    right:90px;
+
+    background:#1262ed;
+
+    box-shadow:0 0 30px #1262ed;
+}
+
+.share{
+    right:50px;
+    bottom:150px;
+
+    background:#7a22ec;
+
+    box-shadow:0 0 30px #7a22ec;
+}
+
+.book{
+    bottom:60px;
+    left:120px;
+
+    background:#ff9717;
+
+    box-shadow:0 0 30px #ff9717;
+}
+
+.check{
+    left:40px;
+    top:170px;
+
+    background:#10bd8b;
+
+    box-shadow:0 0 30px #10bd8b;
+}
+
+@keyframes float{
+
+    0%,100%{
+        transform:translateY(0);
+    }
+
+    50%{
+        transform:translateY(-12px);
+    }
+}
+
+
+/* FEATURES */
+
+.features{
+    grid-column:1/-1;
+
+    display:grid;
+
+    grid-template-columns:
+        repeat(4,1fr);
+
+    gap:18px;
+
+    padding:20px 0 60px;
+}
+
+.feature-card{
+    min-height:180px;
+
+    padding:25px;
+
+    border-radius:22px;
+
+    background:
+        linear-gradient(
+            145deg,
+            rgba(12,38,100,.65),
+            rgba(5,18,54,.65)
+        );
+
+    border:1px solid rgba(65,145,255,.25);
+
+    backdrop-filter:blur(12px);
+
+    transition:.35s;
+}
+
+.feature-card:hover{
+    transform:translateY(-8px);
+
+    border-color:#218cff;
+
+    box-shadow:
+        0 15px 40px rgba(0,90,255,.25);
+}
+
+.feature-icon{
+    width:58px;
+    height:58px;
+
+    display:grid;
+    place-items:center;
+
+    border-radius:50%;
+
+    font-size:25px;
+
+    margin-bottom:18px;
+}
+
+.blue{
+    background:#096cff;
+    box-shadow:0 0 25px #096cff;
+}
+
+.purple{
+    background:#7624ef;
+    box-shadow:0 0 25px #7624ef;
+}
+
+.green{
+    background:#0dbb84;
+    box-shadow:0 0 25px #0dbb84;
+}
+
+.orange{
+    background:#ff9419;
+    box-shadow:0 0 25px #ff9419;
+}
+
+.feature-card h3{
+    font-size:18px;
+
+    margin-bottom:10px;
+}
+
+.feature-card p{
+    color:#aebbd4;
+
+    line-height:1.6;
+
+    font-size:14px;
+}
+
+
+/* MOBILE */
+
+@media(max-width:900px){
+
+    .container{
+        grid-template-columns:1fr;
+    }
+
+    .intro{
+        text-align:center;
+    }
+
+    .description{
+        margin:auto;
+    }
+
+    .login-btn{
+        margin-left:auto;
+        margin-right:auto;
+    }
+
+    .illustration{
+        height:500px;
+    }
+
+    .features{
+        grid-template-columns:repeat(2,1fr);
+    }
+}
+
+
+@media(max-width:600px){
+
+    .header{
+        padding:18px 0;
+    }
+
+    .logo{
+        font-size:15px;
+    }
+
+    .logo-icon{
+        width:32px;
+        height:32px;
+    }
+
+    .admin-btn{
+        padding:10px 12px;
+        font-size:12px;
+    }
+
+    h1{
+        font-size:58px;
+        letter-spacing:-3px;
+    }
+
+    .subtitle{
+        font-size:17px;
+    }
+
+    .description{
+        font-size:14px;
+        line-height:1.7;
+    }
+
+    .illustration{
+        height:400px;
+    }
+
+    .pdf-document{
+        width:210px;
+        height:270px;
+    }
+
+    .pdf-label{
+        font-size:25px;
+        padding:12px 25px;
+    }
+
+    .pdf-lines{
+        left:35px;
+        bottom:50px;
+        gap:10px;
+    }
+
+    .pdf-lines span{
+        width:110px;
+        height:9px;
+    }
+
+    .platform{
+        width:280px;
+    }
+
+    .orbit1{
+        width:350px;
+        height:190px;
+    }
+
+    .orbit2{
+        width:300px;
+        height:160px;
+    }
+
+    .floating-icon{
+        width:50px;
+        height:50px;
+        font-size:20px;
+    }
+
+    .cloud{
+        right:20px;
+        top:30px;
+    }
+
+    .share{
+        right:10px;
+        bottom:100px;
+    }
+
+    .check{
+        left:15px;
+        top:120px;
+    }
+
+    .book{
+        left:50px;
+        bottom:30px;
+    }
+
+    .features{
+        grid-template-columns:1fr;
+    }
+
+}
+
+.admin-link:hover {
+    background: #087cff;
+
+    box-shadow:
+        0 0 15px #087cff,
+        0 0 35px rgba(0, 140, 255, 0.5);
+
+    transform: translateY(-2px);
+}
+
+</style>
+</head>
+
+
+<body>
+
+<div class="bg-glow glow1"></div>
+<div class="bg-glow glow2"></div>
+<div class="grid"></div>
+
+
+<header class="header">
+
+    <div class="logo">
+
+        <div class="logo-icon">
+            ▤
+        </div>
+
+        PDF Share Hub
+
+    </div>
+
+
+    <button class="admin-btn">
+       <a href="admin.html"> 🔒 Admin Login </a>
+    </button>
+
+</header>
+
+
+
+<main class="container">
+
+
+<section class="intro">
+
+    <div class="welcome">
+        Welcome to 👋
+    </div>
+
+
+    <h1>
+        PDF
+        <span>Share Hub</span>
+    </h1>
+
+
+    <p class="subtitle">
+        📄 Your Ultimate PDF Document Library
+    </p>
+
+
+    <div class="description">
+
+        <p>
+            Welcome to my website! This website is proudly created by
+            <strong>Aditya Raj Mishra</strong>, a Class 12 Commerce student
+            and an aspiring
+            <strong>Web Developer, AI & Technology Enthusiast</strong>
+            from Prayagraj, Uttar Pradesh.
+        </p>
+
+        <p>
+            This website is inspired by my passion for
+            <strong>coding, technology, creativity</strong>,
+            and learning new things. I designed this interface to share
+            my ideas, projects, skills, and interests with everyone.
+        </p>
+
+        <p>
+            Thank you for visiting my website. I hope you enjoy exploring
+            it and learning more about me and my work. ✨
+        </p>
+
+    </div>
+
+
+    <a href="#" class="profile-link">
+        ▣ Aditya Raj Mishra
+    </a>
+
+
+    <button class="login-btn" >
+      <a href="library.html" class="admin-link">  🕵️ Explore the PDF Library </a>
+    </button>
+
+</section>
+
+
+
+<section class="illustration">
+
+    <div class="orbit orbit1"></div>
+    <div class="orbit orbit2"></div>
+    <div class="orbit orbit3"></div>
+
+
+    <div class="floating-icon cloud">
+        ☁
+    </div>
+
+    <div class="floating-icon share">
+        ●
+    </div>
+
+    <div class="floating-icon book">
+        ▣
+    </div>
+
+    <div class="floating-icon check">
+        ✓
+    </div>
+
+
+    <div class="pdf-document">
+
+        <div class="pdf-fold"></div>
+
+        <div class="pdf-label">
+            PDF
+        </div>
+
+        <div class="pdf-lines">
+
+            <span></span>
+            <span></span>
+            <span></span>
+
+        </div>
+
+    </div>
+
+
+    <div class="platform"></div>
+
+</section>
+
+
+
+<section class="features">
+
+
+<div class="feature-card">
+
+    <div class="feature-icon blue">
+        ▤
+    </div>
+
+    <h3>
+        Large PDF Collection
+    </h3>
+
+    <p>
+        Explore a wide range of PDF documents on various topics.
+    </p>
+
+</div>
+
+
+
+<div class="feature-card">
+
+    <div class="feature-icon purple">
+        ⚡
+    </div>
+
+    <h3>
+        Fast & Easy Access
+    </h3>
+
+    <p>
+        Find and access the documents you need quickly and easily.
+    </p>
+
+</div>
+
+
+
+<div class="feature-card">
+
+    <div class="feature-icon green">
+        ♢
+    </div>
+
+    <h3>
+        Secure & Reliable
+    </h3>
+
+    <p>
+        Your data and privacy are protected with top security.
+    </p>
+
+</div>
+
+
+
+<div class="feature-card">
+
+    <div class="feature-icon orange">
+        ✦
+    </div>
+
+    <h3>
+        Built for Everyone
+    </h3>
+
+    <p>
+        A simple and intuitive platform for students,
+        learners & professionals.
+    </p>
+
+</div>
+
+
+</section>
+
+</main>
+
+
 </body>
 </html>
